@@ -2,9 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FOOTBALL MARKET</title>
+
 <style>
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -13,39 +17,113 @@ body {
 }
 header {
   background: #17251b;
-  padding: 25px 10px;
   text-align: center;
+  padding: 30px 10px;
   border-bottom: 3px solid #39e75f;
 }
 header h1 {
   color: #39e75f;
-  margin: 0;
+  font-size: 27px;
 }
-header p { color: #ddd; }
+header p {
+  color: #ddd;
+}
 nav {
   display: flex;
   justify-content: space-around;
   background: #202b22;
-  padding: 14px 3px;
+  padding: 15px 5px;
 }
 nav a {
   color: white;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
 }
-main { padding: 15px; }
-h2 { color: #39e75f; }
+main {
+  padding: 15px;
+}
+h2 {
+  color: #39e75f;
+}
 .card {
   background: #202b22;
   padding: 18px;
-  margin: 12px 0;
+  margin: 15px 0;
   border-radius: 12px;
   border: 1px solid #354638;
 }
 button {
   background: #39e75f;
+  color: #101510;
   border: none;
   padding: 12px 20px;
   border-radius: 8px;
   font-weight: bold;
-  cursor:
+}
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>⚽ FOOTBALL MARKET</h1>
+  <p>كل ما يخص عالم كرة القدم في مكان واحد</p>
+</header>
+
+<nav>
+  <a href="#market">السوق</a>
+  <a href="#memories">الذكريات</a>
+  <a href="#community">المجتمع</a>
+</nav>
+
+<main>
+
+<section id="market">
+  <h2>🛒 سوق كرة القدم</h2>
+
+  <div class="card">
+    <h3>👕 تيشيرتات الأندية</h3>
+    <p>بيع وشراء قمصان الأندية المفضلة.</p>
+    <button onclick="alert('قريباً')">استكشف</button>
+  </div>
+
+  <div class="card">
+    <h3>👟 أحذية كرة القدم</h3>
+    <p>أحذية رياضية لمختلف اللاعبين.</p>
+    <button onclick="alert('قريباً')">استكشف</button>
+  </div>
+
+  <div class="card">
+    <h3>⚽ الكرات والمقتنيات</h3>
+    <p>كرات وتذكارات ومقتنيات كروية.</p>
+    <button onclick="alert('قريباً')">استكشف</button>
+  </div>
+</section>
+
+<section id="memories">
+  <h2>🏆 ذكريات كروية</h2>
+  <div class="card">
+    <p>أجمل لحظات وتاريخ كرة القدم.</p>
+  </div>
+</section>
+
+<section id="community">
+  <h2>💬 مجتمع المشجعين</h2>
+  <div class="card">
+    <p>مكان يجمع مشجعي كرة القدم لمشاركة آرائهم.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  FOOTBALL MARKET © 2026
+</footer>
+
+</body>
+</html>
