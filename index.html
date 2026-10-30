@@ -126,4 +126,57 @@ footer {
 </footer>
 
 </body>
+<section id="add-product">
+<h2>📦 أضف منتجك للبيع</h2>
+
+<div class="card">
+<form onsubmit="addProduct(event)">
+<input id="productName" placeholder="اسم المنتج" required>
+<br><br>
+
+<input id="productPrice" type="number" placeholder="السعر بالجنيه" required>
+<br><br>
+
+<select id="productType" required>
+<option value="">اختر نوع المنتج</option>
+<option>تيشيرت</option>
+<option>حذاء كرة</option>
+<option>كرة قدم</option>
+<option>مقتنيات</option>
+</select>
+<br><br>
+
+<input id="productPhone" placeholder="رقم التواصل" required>
+<br><br>
+
+<button type="submit">نشر المنتج</button>
+</form>
+</div>
+
+<div id="products"></div>
+</section>
+
+<script>
+function addProduct(event) {
+event.preventDefault();
+
+let name = document.getElementById("productName").value;
+let price = document.getElementById("productPrice").value;
+let type = document.getElementById("productType").value;
+
+let product = document.createElement("div");
+product.className = "card";
+
+product.innerHTML =
+"<h3>" + name + "</h3>" +
+"<p>النوع: " + type + "</p>" +
+"<p>السعر: " + price + " جنيه</p>";
+
+document.getElementById("products").appendChild(product);
+
+event.target.reset();
+}
+</script>
+
+</body>
 </html>
