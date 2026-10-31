@@ -471,5 +471,21 @@ openMomentDB().then(loadMoments).catch(()=>{
  "تعذر تشغيل قسم اللحظات. تأكد من دعم المتصفح للتخزين.";
 });
   </script>
+  <!-- Supabase Connection -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "ضع رابط مشروعك هنا";
+const SUPABASE_KEY = "ضع Publishable Key هنا";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+window.supabaseClient = supabaseClient;
+
+console.log("FOOTBALL MARKET connected to Supabase");
+</script>
 </body>
 </html>
