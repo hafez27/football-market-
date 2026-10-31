@@ -267,7 +267,16 @@ event.target.reset();
 </button>
 
 <section id="starMomentPage">
+<button onclick="closeStarMoments()" style="background:#f1c40f;color:#111;border:0;padding:12px 20px;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin-bottom:15px;">
+⬅️ الرجوع للرئيسية
+</button>
 
+<script>
+function closeStarMoments() {
+    document.getElementById("starMomentPage").style.display = "none";
+    window.scrollTo(0, 0);
+}
+</script>
 <h2>⭐ لحظتي مع نجمي</h2>
 
 <p>شارك أجمل لحظاتك مع نجوم كرة القدم!</p>
