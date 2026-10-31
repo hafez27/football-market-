@@ -177,6 +177,299 @@ document.getElementById("products").appendChild(product);
 event.target.reset();
 }
 </script>
+<!-- FOOTBALL MARKET - MOMENT WITH MY STAR -->
 
+<style>
+#starMomentBtn {
+  position:fixed;
+  bottom:85px;
+  right:15px;
+  z-index:9999;
+  background:linear-gradient(135deg,#ffb300,#ff6d00);
+  color:white;
+  border:0;
+  padding:14px 20px;
+  border-radius:30px;
+  font-weight:bold;
+  font-size:15px;
+  box-shadow:0 4px 15px #0004;
+}
+
+#starMomentPage {
+  display:none;
+  position:relative;
+  z-index:999;
+  background:#101820;
+  color:white;
+  padding:18px;
+  border-radius:15px;
+  margin:15px 5px;
+  direction:rtl;
+  font-family:Arial;
+}
+
+#starMomentPage input,
+#starMomentPage textarea {
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin:7px 0;
+  border-radius:9px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+
+#starMomentPage button {
+  padding:11px;
+  border:0;
+  border-radius:9px;
+  background:#ff9800;
+  color:white;
+  font-weight:bold;
+  margin:5px;
+}
+
+.momentCard {
+  background:#243442;
+  padding:13px;
+  border-radius:12px;
+  margin-top:15px;
+}
+
+.momentCard img,
+.momentCard video {
+  width:100%;
+  max-height:350px;
+  object-fit:contain;
+  border-radius:10px;
+}
+</style>
+
+<button id="starMomentBtn" onclick="openStarMoments()">
+⭐ لحظتي مع نجمي
+</button>
+
+<section id="starMomentPage">
+
+<h2>⭐ لحظتي مع نجمي</h2>
+
+<p>شارك أجمل لحظاتك مع نجوم كرة القدم!</p>
+
+<input id="starName"
+placeholder="اسم النجم المفضل">
+
+<input id="clubName"
+placeholder="اسم النادي">
+
+<textarea id="momentText"
+placeholder="احكي لنا عن لحظتك..."></textarea>
+
+<input type="file"
+id="momentFile"
+accept="image/*,video/*">
+
+<button onclick="publishMoment()">
+🚀 انشر لحظتي
+</button>
+
+<button onclick="closeStarMoments()">
+رجوع
+</button>
+
+<hr>
+
+<h3>🌟 أجمل اللحظات</h3>
+
+<div id="momentsList">
+جاري تحميل المنشورات...
+</div>
+
+</section>
+
+<script>
+const FM_DB_NAME = "FootballMarketMoments";
+let momentDB;
+
+function openMomentDB() {
+ return new Promise((resolve,reject)=>{
+  const request=indexedDB.open(FM_DB_NAME,1);
+
+  request.onupgradeneeded=()=>{
+   const db=request.result;
+   if(!db.objectStoreNames.contains("moments")){
+    db.createObjectStore("moments",{keyPath:"id"});
+   }
+  };
+
+  request.onsuccess=()=>{
+   momentDB=request.result;
+   resolve();
+  };
+
+  request.onerror=()=>reject(request.error);
+ });
+}
+
+function openStarMoments(){
+ document.getElementById("starMomentPage").style.display="block";
+ loadMoments();
+}
+
+function closeStarMoments(){
+ document.getElementById("starMomentPage").style.display="none";
+}
+
+async function publishMoment(){
+
+ const star=document.getElementById("starName").value.trim();
+ const club=document.getElementById("clubName").value.trim();
+ const text=document.getElementById("momentText").value.trim();
+ const file=document.getElementById("momentFile").files[0];
+
+ if(!star || !text){
+  alert("اكتب اسم النجم ووصف اللحظة");
+  return;
+ }
+
+ if(file && file.size > 15*1024*1024){
+  alert("حجم الملف أكبر من 15 ميجابايت");
+  return;
+ }
+
+ const post={
+  id:Date.now().toString(),
+  star,
+  club,
+  text,
+  media:file || null,
+  likes:0,
+  comments:[],
+  date:new Date().toLocaleDateString("ar-EG")
+ };
+
+ const tx=momentDB.transaction("moments","readwrite");
+ tx.objectStore("moments").add(post);
+
+ tx.oncomplete=()=>{
+  alert("🎉 تم نشر لحظتك بنجاح!");
+  document.getElementById("starName").value="";
+  document.getElementById("clubName").value="";
+  document.getElementById("momentText").value="";
+  document.getElementById("momentFile").value="";
+  loadMoments();
+ };
+
+ tx.onerror=()=>alert("حدث خطأ أثناء النشر");
+}
+
+function escapeMoment(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
+}
+
+function loadMoments(){
+
+ const list=document.getElementById("momentsList");
+
+ const tx=momentDB.transaction("moments","readonly");
+ const request=tx.objectStore("moments").getAll();
+
+ request.onsuccess=async()=>{
+
+  list.innerHTML="";
+
+  const posts=request.result.sort((a,b)=>b.id.localeCompare(a.id));
+
+  if(!posts.length){
+   list.innerHTML="<p>كن أول من يشارك لحظته مع نجمه ⭐</p>";
+   return;
+  }
+
+  for(const post of posts){
+
+   const card=document.createElement("div");
+   card.className="momentCard";
+
+   let mediaHTML="";
+
+   if(post.media){
+    const url=URL.createObjectURL(post.media);
+
+    if(post.media.type.startsWith("video/")){
+     mediaHTML=`<video controls src="${url}"></video>`;
+    }else{
+     mediaHTML=`<img src="${url}" alt="لحظة مع النجم">`;
+    }
+   }
+
+   card.innerHTML=`
+    <h3>⭐ ${escapeMoment(post.star)}</h3>
+    <p>⚽ ${escapeMoment(post.club || "مشجع كرة قدم")}</p>
+    <p>${escapeMoment(post.text)}</p>
+    ${mediaHTML}
+    <small>${escapeMoment(post.date)}</small>
+    <br>
+    <button onclick="likeMoment('${post.id}')">
+      ❤️ ${post.likes}
+    </button>
+    <button onclick="commentMoment('${post.id}')">
+      💬 التعليقات (${post.comments.length})
+    </button>
+    <div>${post.comments.map(c=>"<p>💬 "+escapeMoment(c)+"</p>").join("")}</div>
+   `;
+
+   list.appendChild(card);
+  }
+ };
+}
+
+function likeMoment(id){
+
+ const tx=momentDB.transaction("moments","readwrite");
+ const store=tx.objectStore("moments");
+ const req=store.get(id);
+
+ req.onsuccess=()=>{
+  const post=req.result;
+  if(post){
+   post.likes++;
+   store.put(post);
+  }
+ };
+
+ tx.oncomplete=loadMoments;
+}
+
+function commentMoment(id){
+
+ const comment=prompt("اكتب تعليقك:");
+
+ if(!comment || !comment.trim()) return;
+
+ const tx=momentDB.transaction("moments","readwrite");
+ const store=tx.objectStore("moments");
+ const req=store.get(id);
+
+ req.onsuccess=()=>{
+  const post=req.result;
+  if(post){
+   post.comments.push(comment.trim());
+   store.put(post);
+  }
+ };
+
+ tx.oncomplete=loadMoments;
+}
+
+openMomentDB().then(loadMoments).catch(()=>{
+ document.getElementById("momentsList").innerText=
+ "تعذر تشغيل قسم اللحظات. تأكد من دعم المتصفح للتخزين.";
+});
+  </script>
 </body>
 </html>
