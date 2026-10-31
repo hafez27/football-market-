@@ -310,9 +310,20 @@ function openMomentDB() {
  });
 }
 
-function openStarMoments(){
- document.getElementById("starMomentPage").style.display="block";
- loadMoments();
+async function openStarMoments(){
+ const page = document.getElementById("starMomentPage");
+
+ page.style.display = "block";
+
+ try {
+  if (!momentDB) {
+   await openMomentDB();
+  }
+  loadMoments();
+ } catch(error) {
+  alert("تعذر فتح قسم اللحظات. حاول تحديث الصفحة.");
+  console.error(error);
+ }
 }
 
 function closeStarMoments(){
